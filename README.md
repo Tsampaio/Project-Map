@@ -22,6 +22,6 @@ Click on index.html to get started!
 
 This project is currently hosted at:
 
-http://79.170.40.241/weboptimization.com/
+http://79.170.44.95/project-map.com/
 
 
