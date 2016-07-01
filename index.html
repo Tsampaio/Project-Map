@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Project Neighborhood Map</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<div class="ProjectName">
+		<h2>Trendy Bars in Manchester</h2>
+		<h4>Udacity Project Neighborhood Map</h4>
+
+		<div class="reset-container">
+	        <button id="reset">Reset Map</button>
+	    </div>
+
+	</div>
+	<div id="map-canvas"></div>
+    <div id="search-container">
+        <div id="search-nav">
+            <input id="input" placeholder="Search..." type="input" data-bind="textInput: query, valueUpdate: 'keydown'" autocomplete="off"></input>
+            <div id="scroller">
+                <ul data-bind="template: {name: 'marker', foreach:markers}">
+                </ul>
+                <script type="text/html" id="marker">
+                    <div data-bind="visible: visible">
+                        <a href="#" data-bind="attr: {id: id}">
+                            <li>
+                                <strong data-bind="text: title"></strong>
+                                <p data-bind="text: streetAddress"></p>
+                                <p data-bind="text: cityAddress"></p>
+                            </li>
+                        </a>
+                    </div>
+                </script>
+            </div>
+        </div>
+        <div id="arrow-container">
+            <img id="arrow" src="img/up-arrow.gif" alt="arrow image">
+        </div>
+    </div>
+	    <div class="weather-container">
+	        <div id="weather-image-container">
+	            <img src="img/weather-underground.png" alt="Weather Underground Logo">
+	            <div class="forecast">
+	                <h3>Manchester Weather Forecast</h3>
+	                <ul style="margin: 0">
+	                </ul>
+	            </div>
+	        </div>
+	        <div id="hide-weather">
+	            <img style="width: 15px" src="img/small-up-arrow.png" style="margin: 0;" alt="Small up arrow">
+	        </div>
+	    </div>
+
+	</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
+    <script src="js/script.js"></script>
+
+
+
+
+
+</body>
+</html>
