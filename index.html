@@ -13,7 +13,7 @@
 		<h4>Udacity Project Neighborhood Map</h4>
 
 		<div class="reset-container">
-	        <button id="reset">Reset Map</button>
+	        <button id="reset" data-bind="click: resetMap">Reset Map</button>
 	    </div>
 
 	</div>
@@ -47,6 +47,8 @@
 	            <div class="forecast">
 	                <h3>Manchester Weather Forecast</h3>
 	                <ul style="margin: 0">
+                        <li data-bind= "text: temperature()"></li>
+                        <li data-bind= "text: iconStyle"></li>
 	                </ul>
 	            </div>
 	        </div>
@@ -57,12 +59,27 @@
 
 	</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-
     <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
     <script src="js/script.js"></script>
 
+    <script>
+        var mapFail = function() {
+            alert("Your map is not loading, please check your internet connection.");
+        };
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?AIzaSyBgwLU6uPt2eHlXHLwgvrjLKoZortKHidE&signed_in=false&callback=initialize" onerror="mapFail()"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
 
 
+
+
+
+
+
+<!--<script async defer src="https://maps.googleapis.com/maps/api/js?AIzaSyBgwLU6uPt2eHlXHLwgvrjLKoZortKHidE&callback=initialize" onerror="googleError()"></script>-->
+
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?AIzaSyBgwLU6uPt2eHlXHLwgvrjLKoZortKHidE&signed_in=false&callback=initialize" onerror="mapFail()"></script>
+-->
 
 
 </body>

@@ -1,23 +1,17 @@
 var map;
 var markersArray = [];
-
-function loadScript() {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://maps.googleapis.com/maps/api/js?AIzaSyBgwLU6uPt2eHlXHLwgvrjLKoZortKHidE' +
-      '&signed_in=false&callback=initialize';
-  document.body.appendChild(script);
-}
-window.onload = loadScript;
+var mapOptions;
 
 //Function Initialize to start the map
 function initialize() {
+
     var mapOptions = {
         zoom: 14,
         center: new google.maps.LatLng(53.475166,  -2.240975),
         mapTypeControl: false,
         disableDefaultUI: true
     };
+
     if($(window).width() <= 1080) {
         mapOptions.zoom = 13;
     }
@@ -31,25 +25,40 @@ function initialize() {
 
     setAllMap();
 
+    viewModel.resetMap = function() {
+    console.log("Reset Map");
+
+    var windowWidth = $(window).width();
+            if(windowWidth <= 1080) {
+                map.setZoom(13);
+                map.setCenter(mapOptions.center);
+            } else if(windowWidth > 1080) {
+                map.setZoom(14);
+                map.setCenter(mapOptions.center);
+            }
+    };
+
+    ko.applyBindings(viewModel);
+
     //Function to reset map on click
     //Also reset view when resizing window
-    function resetMap() {
-        var windowWidth = $(window).width();
-        if(windowWidth <= 1080) {
-            map.setZoom(13);
-            map.setCenter(mapOptions.center);
-        } else if(windowWidth > 1080) {
-            map.setZoom(14);
-            map.setCenter(mapOptions.center);
-        }
+    /*function resetMap() {
+            var windowWidth = $(window).width();
+            if(windowWidth <= 1080) {
+                map.setZoom(13);
+                map.setCenter(mapOptions.center);
+            } else if(windowWidth > 1080) {
+                map.setZoom(14);
+                map.setCenter(mapOptions.center);
+            }
+        }*/
+       /* $("#reset").click(function() {
+            resetMap();
+        });*/
+        /*$(window).resize(function() {
+            resetMap();
+        });*/
     }
-    $("#reset").click(function() {
-        resetMap();
-    });
-   $(window).resize(function() {
-        resetMap();
-    });
-}
 
 //Determines if markers should be visible
 //This function is passed in the knockout viewModel function
@@ -213,7 +222,10 @@ function setMarkers(location) {
     //only display markers and nav elements that match query result
 var viewModel = {
     query: ko.observable(''),
+    temperature : ko.observable(''),
+    iconStyle : ko.observable('')
 };
+
 
 viewModel.markers = ko.dependentObservable(function() {
     var self = this;
@@ -230,7 +242,7 @@ viewModel.markers = ko.dependentObservable(function() {
     });
 }, viewModel);
 
-ko.applyBindings(viewModel);
+
 
 //show $ hide markers in sync with nav
 $("#input").keyup(function() {
@@ -337,7 +349,7 @@ var weatherUgUrl = "http://api.wunderground.com/api/48ee1e1ee2889d26/conditions/
 $.getJSON(weatherUgUrl, function(data) {
     var list = $(".forecast ul");
     detail = data.current_observation;
-    list.append('<li>Temp: ' + detail.temp_c+ '°c</li>');
+    viewModel.temperature('Temp: ' + detail.temp_c + '°c');
     list.append('<li><img style="width: 25px" src="' + detail.icon_url + '">  ' + detail.icon + '</li>');
 }).error(function(e){
         $(".forecast").append('<p style="text-align: center;">Sorry! Weather Underground</p><p style="text-align: center;">Could Not Be Loaded</p>');
