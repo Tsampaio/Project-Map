@@ -185,8 +185,8 @@ function setMarkers(location) {
             }
             map.setCenter(marker.getPosition());
             //tryng to change the url of the image to animate on click
-            location[i].holdMarker.icon.url = 'img/marker2.png';
-            console.log(location[i].holdMarker.icon.url);
+            //location[i].holdMarker.icon.url = 'img/marker2.png';
+            //console.log(location[i].holdMarker.icon.url);
 
             location[i].picBoolTest = true;
           };
