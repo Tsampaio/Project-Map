@@ -1,16 +1,14 @@
 var map;
 var markersArray = [];
-var mapOptions;
-
-//Function Initialize to start the map
-function initialize() {
-
-    var mapOptions = {
+var mapOptions = {
         zoom: 14,
-        center: new google.maps.LatLng(53.475166,  -2.240975),
+        center: {lat: 53.475166, lng: -2.240975},
         mapTypeControl: false,
         disableDefaultUI: true
     };
+
+//Function Initialize to start the map
+function initialize() {
 
     if($(window).width() <= 1080) {
         mapOptions.zoom = 13;
@@ -25,51 +23,22 @@ function initialize() {
 
     setAllMap();
 
-    viewModel.resetMap = function() {
-    console.log("Reset Map");
 
-    var windowWidth = $(window).width();
-            if(windowWidth <= 1080) {
-                map.setZoom(13);
-                map.setCenter(mapOptions.center);
-            } else if(windowWidth > 1080) {
-                map.setZoom(14);
-                map.setCenter(mapOptions.center);
-            }
-    };
-
-    ko.applyBindings(viewModel);
-
-    //Function to reset map on click
-    //Also reset view when resizing window
-    /*function resetMap() {
-            var windowWidth = $(window).width();
-            if(windowWidth <= 1080) {
-                map.setZoom(13);
-                map.setCenter(mapOptions.center);
-            } else if(windowWidth > 1080) {
-                map.setZoom(14);
-                map.setCenter(mapOptions.center);
-            }
-        }*/
-       /* $("#reset").click(function() {
-            resetMap();
-        });*/
-        /*$(window).resize(function() {
-            resetMap();
-        });*/
     }
 
 //Determines if markers should be visible
 //This function is passed in the knockout viewModel function
 function setAllMap() {
-  for (var i = 0; i < markers.length; i++) {
-    if(markers[i].boolTest === true) {
-    markers[i].holdMarker.setMap(map);
-    } else {
-    markers[i].holdMarker.setMap(null);
+
+    var len = markers.length;
+    for (var i = 0; i < len; i++) {
+
+        if(markers[i].boolTest === true) {
+        markers[i].holdMarker.setMap(map);
+        } else {
+                markers[i].holdMarker.setMap(null);
+                }
     }
-  }
 }
 
 //Information for the different locations
@@ -155,10 +124,13 @@ function determineImage() {
 function setMarkers(location) {
 
     for(i=0; i<location.length; i++) {
+
+
         location[i].holdMarker = new google.maps.Marker({
           position: new google.maps.LatLng(location[i].lat, location[i].lng),
           map: map,
           title: location[i].title,
+          //animation: google.maps.Animation.DROP,
           icon: {
             url: 'img/marker.png',
             size: new google.maps.Size(25, 40),
@@ -169,7 +141,19 @@ function setMarkers(location) {
             coords: [1,25,-40,-25,1],
             type: 'poly'
           }
+          //location[i].holdMarker('click', toggleBounce);
         });
+
+        //function to animate the marker
+        /*function toggleBounce() {
+            if (location[i].holdMarker.getAnimation() !== null) {
+                location[i].holdMarker.setAnimation(null);
+            } else {
+            location[i].holdMarker.setAnimation(google.maps.Animation.BOUNCE);
+          }
+        }*/
+
+
 
         //get google street view images for info windows
         determineImage();
@@ -189,6 +173,7 @@ function setMarkers(location) {
         //Click on marker to view infoWindow
             //zoom in and center location on click
         new google.maps.event.addListener(location[i].holdMarker, 'click', (function(marker, i) {
+
           return function() {
             infowindow.setContent(location[i].contentString);
             infowindow.open(map,this);
@@ -199,6 +184,10 @@ function setMarkers(location) {
                 map.setZoom(16);
             }
             map.setCenter(marker.getPosition());
+            //tryng to change the url of the image to animate on click
+            location[i].holdMarker.icon.url = 'img/marker2.png';
+            console.log(location[i].holdMarker.icon.url);
+
             location[i].picBoolTest = true;
           };
         })(location[i].holdMarker, i));
@@ -223,7 +212,25 @@ function setMarkers(location) {
 var viewModel = {
     query: ko.observable(''),
     temperature : ko.observable(''),
-    iconStyle : ko.observable('')
+    iconStyle : ko.observable(''),
+    iconDetail : ko.observable(''),
+    url: ko.observable(''),
+    arrow: ko.observable('')
+
+};
+
+viewModel.resetMap = function() {
+    //Function to reset map on click
+    console.log("Reset Map");
+
+    var windowWidth = $(window).width();
+            if(windowWidth <= 1080) {
+                map.setZoom(13);
+                map.setCenter(mapOptions.center);
+            } else if(windowWidth > 1080) {
+                map.setZoom(14);
+                map.setCenter(mapOptions.center);
+            }
 };
 
 
@@ -350,7 +357,9 @@ $.getJSON(weatherUgUrl, function(data) {
     var list = $(".forecast ul");
     detail = data.current_observation;
     viewModel.temperature('Temp: ' + detail.temp_c + '°c');
-    list.append('<li><img style="width: 25px" src="' + detail.icon_url + '">  ' + detail.icon + '</li>');
+    viewModel.url(detail.icon_url);
+    viewModel.iconDetail(detail.icon);
+
 }).error(function(e){
         $(".forecast").append('<p style="text-align: center;">Sorry! Weather Underground</p><p style="text-align: center;">Could Not Be Loaded</p>');
     });
@@ -377,3 +386,6 @@ function hideWeather() {
 }
 
 $("#hide-weather").click(hideWeather);
+
+ko.applyBindings(viewModel);
+

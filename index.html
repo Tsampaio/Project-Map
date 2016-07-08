@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="css/style.css" rel="stylesheet" type="text/css">
 
+
 </head>
 
 <body>
@@ -48,7 +49,7 @@
 	                <h3>Manchester Weather Forecast</h3>
 	                <ul style="margin: 0">
                         <li data-bind= "text: temperature()"></li>
-                        <li data-bind= "text: iconStyle"></li>
+                        <li><img style="width: 25px" data-bind= "attr: { src: url}"><span data-bind="text: iconDetail()"></span></li>
 	                </ul>
 	            </div>
 	        </div>
